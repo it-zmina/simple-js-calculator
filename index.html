@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Calculator</title>
+    <style>
+        p, input {
+            font-family: monospace;
+        }
+
+        p {
+            white-space: pre;
+        }
+    </style>
+</head>
+<body>
+
+<div id="myCalc">
+    <p>Addition</p>
+    <p>x <input id="calc-x-input" value="0" onkeyup="handleXCalcEvent()"></p>
+    <p>+</p>
+    <p>y <input id="calc-y-input" value="0" onkeyup="handleYCalcEvent()"></p>
+    <p>--------------------</p>
+    <p>= <span id="calc-result"></span></p>
+</div>
+
+<script type="text/javascript">
+    let calculator
+    // evaluates only once after loading web page
+    window.onload = function () {
+        // User Interface fields
+        const xElement = document.getElementById("calc-x-input")
+        const yElement = document.getElementById("calc-y-input")
+        const resultElement = document.getElementById("calc-result")
+        // Create calculator object
+        calculator = new Calc(xElement, yElement, resultElement)
+        calculator.updateX()
+        calculator.updateY()
+    }
+    // On change X field value
+    function handleXCalcEvent() {
+        calculator.updateX()
+    }
+    // On change Y filed value
+    function handleYCalcEvent() {
+        calculator.updateY()
+    }
+
+    function Calc(xInput, yInput, output) {
+        this.xInput = xInput
+        this.yInput = yInput
+        this.output = output
+        this.xValue = 0
+        this.yValue = 0
+        this.result = 0
+        // parse X field value
+        this.updateX = function () {
+            let number = parseFloat(this.xInput.value)
+            if (isNaN(number) || !isFinite(number)) {
+                return
+            }
+            this.xValue = number
+            this.render()
+        }
+        // parse Y field value
+        this.updateY = function () {
+            let number = parseFloat(this.yInput.value)
+            if (isNaN(number) || !isFinite(number)) {
+                return
+            }
+            this.yValue = number
+            this.render()
+        }
+        // define result
+        this.render = function () {
+            this.result = this.xValue + this.yValue
+            this.output.innerText = this.result
+        }
+    }
+</script>
+</body>
+</html>
