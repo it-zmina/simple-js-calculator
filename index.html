@@ -18,7 +18,12 @@
 <div id="myCalc">
     <p>Addition</p>
     <p><label for="calc-x-input">X</label><input id="calc-x-input" value="0" onkeyup="handleXCalcEvent()"></p>
-    <p>+</p>
+    <p><label for="calc-operation">Select operation</label><select id="calc-operation" onchange="handleOperationEvent()">
+        <option value="PLUS" label="+"></option>
+        <option value="SUBTRACT" label="-"></option>
+        <option value="MULTIPLY" label="*"></option>
+        <option value="DIVIDE" label="/"></option>
+    </select></p>
     <p><label for="calc-y-input">Y</label><input id="calc-y-input" value="0" onkeyup="handleYCalcEvent()"></p>
     <p>--------------------</p>
     <p>= <span id="calc-result"></span></p>
@@ -32,8 +37,9 @@
         const xElement = document.getElementById("calc-x-input")
         const yElement = document.getElementById("calc-y-input")
         const resultElement = document.getElementById("calc-result")
+        const selectedOperation = document.getElementById("calc-operation")
         // Create calculator object
-        calculator = new Calc(xElement, yElement, resultElement)
+        calculator = new Calc(xElement, yElement, resultElement, selectedOperation)
         calculator.updateX()
         calculator.updateY()
     }
@@ -45,11 +51,16 @@
     function handleYCalcEvent() {
         calculator.updateY()
     }
+    // On update
+    function handleOperationEvent() {
+        calculator.render()
+    }
 
-    function Calc(xInput, yInput, output) {
+    function Calc(xInput, yInput, output, operationList) {
         this.xInput = xInput
         this.yInput = yInput
         this.output = output
+        this.operationList = operationList
         this.xValue = 0
         this.yValue = 0
         this.result = 0
@@ -73,7 +84,15 @@
         }
         // define result
         this.render = function () {
-            this.result = this.xValue + this.yValue
+            const operation = this.operationList.value
+            switch (operation) {
+                case 'PLUS': this.result = this.xValue + this.yValue
+                    break
+                case 'MULTIPLY': this.result = this.xValue * this.yValue
+                    break
+                default: this.result = 'UNKNOWN OPERATION'
+            }
+
             this.output.innerText = this.result
         }
     }
